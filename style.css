@@ -22,9 +22,9 @@ html, body {
     overflow-x: hidden;
 }
 
-/* Background image (your Background.jpg) */
+/* background image (your background.jpg) */
 body {
-    background: url("assets/Background.jpg") center/cover no-repeat fixed;
+    Background: url("assets/background.jpg") center/cover no-repeat fixed;
     backdrop-filter: blur(2.5px);
 }
 
