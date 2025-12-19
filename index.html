@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>POMPR-FUN v1.0</title>
+
+    <!-- Responsive layout -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Notes:
+         - All JS is externally loaded in app.js
+         - CSV files loaded dynamically from /csv/
+         - Assets (logo + Background.jpg) loaded from /assets/
+    -->
+</head>
+
+<body>
+
+    <!-- HEADER WITH LOGO -->
+<header id="pf-header">
+    <img src="assets/pompr-fun_logo.png" 
+         alt="POMPR-FUN Logo"
+         id="pf-logo" />
+</header>
+
+    <!-- MAIN APP WRAPPER -->
+    <main id="pf-app-wrapper">
+        <!-- =============================== -->
+        <!--        SCENE SELECTOR PANEL    -->
+        <!-- =============================== -->
+        <section class="pf-panel" id="panel-scene">
+            <h2 class="pf-panel-title">Scene</h2>
+
+            <select id="scene-select" class="pf-dropdown">
+                <option value="">-- Select a Scene --</option>
+            </select>
+
+            <p class="pf-panel-help">
+                Choose a setting or environment for the prompt.
+            </p>
+        </section>
+
+
+        <!-- =============================== -->
+        <!--      CHARACTER SELECTOR PANEL  -->
+        <!-- =============================== -->
+        <section class="pf-panel" id="panel-character">
+            <h2 class="pf-panel-title">Character</h2>
+
+            <select id="character-select" class="pf-dropdown">
+                <option value="">-- Select a Character --</option>
+            </select>
+
+            <p class="pf-panel-help">
+                Choose the primary subject for your prompt.
+            </p>
+        </section>
+
+
+        <!-- =============================== -->
+        <!--       ACTION SELECTOR PANEL    -->
+        <!-- =============================== -->
+        <section class="pf-panel" id="panel-action">
+            <h2 class="pf-panel-title">Action</h2>
+
+            <select id="action-select" class="pf-dropdown">
+                <option value="">-- Select an Action --</option>
+            </select>
+
+            <p class="pf-panel-help">
+                Choose what the subject is doing.
+            </p>
+        </section>
+
+
+        <!-- =============================== -->
+        <!--      BACKGROUND SELECTOR PANEL -->
+        <!-- =============================== -->
+        <section class="pf-panel" id="panel-background">
+            <h2 class="pf-panel-title">Background</h2>
+
+            <select id="background-select" class="pf-dropdown">
+                <option value="">-- Select a Background --</option>
+            </select>
+
+            <p class="pf-panel-help">
+                Choose a background type: flat, chroma, or pattern-enabled.
+            </p>
+        </section>
+
+
+        <!-- ======================================= -->
+        <!--      PATTERN BACKGROUND MODULE (ENABLED) -->
+        <!-- ======================================= -->
+        <section class="pf-panel" id="panel-pattern">
+            <h2 class="pf-panel-title">Pattern Background</h2>
+
+            <!-- Pattern Type -->
+            <label class="pf-label">Pattern Type</label>
+            <select id="pattern-type" class="pf-dropdown">
+                <option value="">-- Select Pattern --</option>
+                <option value="houndstooth">Houndstooth</option>
+                <option value="diagonal stripe">Diagonal Stripe</option>
+                <option value="dot">Dots</option>
+                <option value="grid">Grid</option>
+                <option value="chevron">Chevron</option>
+                <option value="leopard">Leopard</option>
+                <option value="wavy stripe">Wavy Stripe</option>
+
+                <!-- PLAIDS -->
+                <option value="windowpane plaid">Windowpane Plaid</option>
+                <option value="tartan plaid">Tartan Plaid</option>
+                <option value="buffalo plaid">Buffalo Check Plaid</option>
+                <option value="madras plaid">Madras Plaid</option>
+                <option value="glen plaid">Glen Plaid</option>
+            </select>
+
+
+            <!-- HEX COLOR INPUT -->
+            <label class="pf-label">Primary Color (HEX)</label>
+            <input 
+                id="pattern-color"
+                type="text"
+                placeholder="#FFFFFF"
+                maxlength="7"
+                class="pf-input"
+            />
+
+            <!-- RECENT COLOR SAMPLER -->
+            <div id="pattern-recent-wrapper">
+                <label class="pf-label">Recent Colors</label>
+                <div id="pattern-recent"></div>
+            </div>
+
+
+            <!-- SCALE SLIDER -->
+            <label class="pf-label">Pattern Scale</label>
+            <input 
+                type="range"
+                id="pattern-scale"
+                min="0"
+                max="100"
+                value="40"
+                class="pf-slider"
+            />
+
+            <p class="pf-panel-help">
+                Patterns apply only when <strong>Pattern Background</strong> is selected and <strong>Chroma</strong> is not active.
+            </p>
+
+        </section>
+
+
+        <!-- =============================== -->
+        <!--        EDIT PROMPT PANEL        -->
+        <!-- =============================== -->
+        <section class="pf-panel" id="panel-editor">
+            <h2 class="pf-panel-title">Edit Prompt</h2>
+
+            <textarea id="edit-prompt" class="pf-textarea"></textarea>
+
+            <div class="pf-editor-buttons">
+                <button id="unlock-editor" class="pf-button">Unlock Editor</button>
+                <button id="new-prompt" class="pf-button">New</button>
+            </div>
+        </section>
+
+
+        <!-- =============================== -->
+        <!--        COMPILE OUTPUT PANEL     -->
+        <!-- =============================== -->
+        <section class="pf-panel" id="panel-compiled">
+            <h2 class="pf-panel-title">Compiled Prompt</h2>
+
+            <textarea id="compiled-output" class="pf-textarea" readonly></textarea>
+
+            <div class="pf-compiler-buttons">
+               <button id="compile-prompt" type="button" class="pf-button">Compile Prompt</button>
+		<button id="copyBtn" type="button" class="pf-button">Copy Prompt</button>
+               <button id="randomix" type="button" class="pf-button">Randomix</button>
+            </div>
+        </section>
+        <!-- =============================== -->
+        <!--               FOOTER            -->
+        <!-- =============================== -->
+        <footer id="pf-footer">
+            POMPR-FUN © 2025 Bob Aiese
+        </footer>
+
+    </main> <!-- end #pf-app-wrapper -->
+
+
+    <!-- =============================== -->
+    <!--         JAVASCRIPT LOADER      -->
+    <!-- =============================== -->
+    <script src="app.js"></script>
+
+</body>
+</html>
