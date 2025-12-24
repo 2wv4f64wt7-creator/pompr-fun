@@ -60,6 +60,34 @@ function shuffle(arr) {
     return a;
 }
 
+// Detect whether a scene describes a physical location
+function isLocationalScene(sceneText) {
+  if (!sceneText) return false;
+
+  const locationalKeywords = [
+    "airport",
+    "cafe",
+    "beach",
+    "corridor",
+    "street",
+    "room",
+    "office",
+    "classroom",
+    "gate",
+    "counter",
+    "shoreline",
+    "hallway",
+    "station",
+    "market",
+    "alley",
+    "platform",
+    "terminal"
+  ];
+
+  return locationalKeywords.some(keyword =>
+    sceneText.toLowerCase().includes(keyword)
+  );
+}
 
 /* ============================================================
    CSV LOADER
@@ -516,51 +544,64 @@ el.randomixBtn.addEventListener("click", () => {
     el.character.value = PFState.character;
     el.action.value    = PFState.action;
 
-    // Random background
-    PFState.background = pickRandom(PFState.csvData.backgrounds)?.name || "";
-    el.background.value = PFState.background;
+    // ------------------------------------------------------------
+    // Background & Pattern Randomix (FUN Rules Applied)
+    // ------------------------------------------------------------
 
-    // Determine if pattern module should activate
-    const chroma = isChromaBackground(PFState.background);
+    // Default reset
+    PFState.background = "";
+    el.background.value = "";
 
-    if (!chroma) {
-        // Random pattern type
-        const patternTypes = [
-            "houndstooth", "diagonal stripe", "dot", "grid",
-            "chevron", "leopard", "wavy stripe",
-            "windowpane plaid", "tartan plaid",
-            "buffalo plaid", "madras plaid", "glen plaid"
-        ];
-        PFState.pattern.type = pickRandom(patternTypes) || "";
-        el.patternType.value = PFState.pattern.type;
+    PFState.pattern.type = "";
+    PFState.pattern.hex = "";
+    PFState.pattern.scale = 40;
 
-        // Random HEX color
-        PFState.pattern.hex = randomHex();
-        el.patternHex.value = PFState.pattern.hex;
+    el.patternType.value = "";
+    el.patternHex.value = "";
+    el.patternScale.value = 40;
+    el.patternRecent.innerHTML = "";
 
-        // Random pattern scale
-        PFState.pattern.scale = randomScale();
-        el.patternScale.value = PFState.pattern.scale;
+    disablePatternPanel();
 
-        // Store + render recent colors
-        storeRecentColor(PFState.pattern.hex);
-        renderRecentColors();
+    const sceneIsLocational =
+        PFState.scene && isLocationalScene(PFState.scene);
 
-        enablePatternPanel();
-    } 
-    else {
-        // Chroma overrides patterns entirely
-        PFState.pattern.type = "";
-        PFState.pattern.hex = "";
-        PFState.pattern.scale = 40;
-        PFState.pattern.recent = [];
+    // RULE 2: If scene is locational, suppress background & pattern
+    if (!sceneIsLocational) {
 
-        el.patternType.value = "";
-        el.patternHex.value = "";
-        el.patternScale.value = 40;
-        el.patternRecent.innerHTML = "";
+        // Background allowed (~55–60%)
+        if (Math.random() < 0.58) {
+            PFState.background =
+                pickRandom(PFState.csvData.backgrounds)?.name || "";
+            el.background.value = PFState.background;
 
-        disablePatternPanel();
+            const chroma = isChromaBackground(PFState.background);
+
+            // RULE 1: Pattern only allowed if background exists AND is not chroma
+            if (!chroma && Math.random() < 0.28) {
+
+                const patternTypes = [
+                    "houndstooth", "diagonal stripe", "dot", "grid",
+                    "chevron", "leopard", "wavy stripe",
+                    "windowpane plaid", "tartan plaid",
+                    "buffalo plaid", "madras plaid", "glen plaid"
+                ];
+
+                PFState.pattern.type = pickRandom(patternTypes) || "";
+                el.patternType.value = PFState.pattern.type;
+
+                PFState.pattern.hex = randomHex();
+                el.patternHex.value = PFState.pattern.hex;
+
+                PFState.pattern.scale = randomScale();
+                el.patternScale.value = PFState.pattern.scale;
+
+                storeRecentColor(PFState.pattern.hex);
+                renderRecentColors();
+
+                enablePatternPanel();
+            }
+        }
     }
 
     // Refresh editor with new randomized state
